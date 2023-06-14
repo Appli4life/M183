@@ -17,6 +17,7 @@ namespace Session.Context
         {
             Users.Add(new UserIdentity { UserName = "Tom", Role = SessionConstants.UserRole });
             Users.Add(new UserIdentity { UserName = "Friz", Role = SessionConstants.AdminRole });
+            SaveChanges();
 
             base.OnModelCreating(modelBuilder);
         }
