@@ -1,11 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace Session.Context.Entity
 {
     public class UserIdentity
     {
         public int Id { get; set; }
-        
+
         [MaxLength(50)]
         public string UserName { get; set; }
 
