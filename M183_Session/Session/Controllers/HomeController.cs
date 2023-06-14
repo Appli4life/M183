@@ -1,32 +1,45 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Session.Models;
+using Session.Utilities;
 using System.Diagnostics;
 
 namespace Session.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ILogger<HomeController> logger;
 
         public HomeController(ILogger<HomeController> logger)
         {
-            _logger = logger;
+            this.logger = logger;
         }
 
+        [HttpGet]
         public IActionResult Index()
         {
             return View();
         }
 
-        public IActionResult Privacy()
+        [HttpPost]
+        public async Task<IActionResult> Login()
+        {
+            // TODO: Check Login
+            return RedirectToAction("Welcome", "Home");
+        }
+
+        [HttpGet]
+        [SessionAuthorization]
+        public async Task<IActionResult> Welcome()
         {
             return View();
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        [HttpGet]
+        [SessionAuthorization(SessionConstants.AdminRole)]
+        public async Task<IActionResult> Logging()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+
         }
     }
 }
