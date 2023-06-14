@@ -1,8 +1,8 @@
-﻿using M183_Session.Models;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Session.Models;
 using System.Diagnostics;
 
-namespace M183_Session.Controllers
+namespace Session.Controllers
 {
     public class HomeController : Controller
     {

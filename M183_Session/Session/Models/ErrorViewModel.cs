@@ -1,4 +1,4 @@
-namespace M183_Session.Models
+namespace Session.Models
 {
     public class ErrorViewModel
     {
