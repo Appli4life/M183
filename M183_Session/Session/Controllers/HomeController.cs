@@ -22,7 +22,7 @@ namespace Session.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login()
+        public async Task<IActionResult> Login(UserViewModel userViewModel)
         {
             // TODO: Check Login
             return RedirectToAction("Welcome", "Home");
@@ -39,7 +39,7 @@ namespace Session.Controllers
         [SessionAuthorization(SessionConstants.AdminRole)]
         public async Task<IActionResult> Logging()
         {
-
+            return View();
         }
     }
 }

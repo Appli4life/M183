@@ -1,3 +1,18 @@
-﻿@{
-    Layout = "_Layout";
+@inject IHttpContextAccessor Context
+
+@{
+    var currentRole = Context.HttpContext.Session.GetString(SessionConstants.RoleProperty);
+    switch (currentRole)
+    {
+        case SessionConstants.UserRole:
+            Layout = "~/Views/Shared/_Layout.cshtml";
+            break;
+        case SessionConstants.UserRole:
+            Layout = "~/Views/Shared/_AdminLayout.cshtml";
+            break;
+        default:
+            Layout = "~/Views/Shared/_Layout.cshtml";
+            break;
+
+    }
 }
