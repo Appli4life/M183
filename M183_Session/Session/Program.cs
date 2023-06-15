@@ -1,7 +1,16 @@
+using Microsoft.EntityFrameworkCore;
+using Session.Context;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddDbContext<SessionDBContext>(o =>
+{
+    o.UseInMemoryDatabase("SessionM183");
+});
 
 // Session
 builder.Services.AddDistributedMemoryCache();
@@ -36,5 +45,11 @@ app.UseSession();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<SessionDBContext>();
+    context.Seed();
+}
 
 app.Run();

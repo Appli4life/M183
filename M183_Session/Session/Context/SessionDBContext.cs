@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Session.Context.Entity;
 using Session.Utilities;
 
@@ -6,20 +8,43 @@ namespace Session.Context
 {
     public class SessionDBContext : DbContext
     {
-        public DbSet<UserIdentity> Users { get; set; }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        public SessionDBContext()
         {
-            optionsBuilder.UseInMemoryDatabase("SessionM182");
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        public SessionDBContext(DbContextOptions<SessionDBContext> options)
+            : base(options) { }
+
+        public DbSet<UserIdentity> Users { get; set; }
+
+        public void Seed()
         {
-            Users.Add(new UserIdentity { UserName = "Tom", Role = SessionConstants.UserRole });
-            Users.Add(new UserIdentity { UserName = "Friz", Role = SessionConstants.AdminRole });
+            var hasher = new PasswordHasher<UserIdentity>();
+
+            var user = new UserIdentity()
+            {
+                Id = 1,
+                UserName = "Simon",
+                Password = "Simon",
+                Role = SessionConstants.UserRole,
+            };
+
+            user.Password = hasher.HashPassword(user, user.Password);
+
+            var adminUser = new UserIdentity()
+            {
+                Id = 2,
+                UserName = "Admin",
+                Role = SessionConstants.AdminRole,
+                Password = "Admin"
+            };
+
+            adminUser.Password = hasher.HashPassword(adminUser, adminUser.Password);
+
+            this.Users.Add(user);
+            this.Users.Add(adminUser);
             SaveChanges();
 
-            base.OnModelCreating(modelBuilder);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace Session.Models
 {
@@ -6,10 +6,12 @@ namespace Session.Models
     {
         public int Id { get; set; }
 
-        [MaxLength(255), MinLength(5), Required]
+        [MaxLength(50)]
+        [Required]
         public string UserName { get; set; }
 
-        [MaxLength(255), MinLength(8), Required]
+        [MaxLength(255)]
+        [Required]
         public string UserPassword { get; set; }
 
     }

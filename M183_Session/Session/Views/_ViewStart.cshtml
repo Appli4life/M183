@@ -1,3 +1,4 @@
+@using Session.Utilities;
 @inject IHttpContextAccessor Context
 
 @{
@@ -7,7 +8,7 @@
         case SessionConstants.UserRole:
             Layout = "~/Views/Shared/_Layout.cshtml";
             break;
-        case SessionConstants.UserRole:
+        case SessionConstants.AdminRole:
             Layout = "~/Views/Shared/_AdminLayout.cshtml";
             break;
         default:

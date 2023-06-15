@@ -1,19 +1,23 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-    HttpContext.
-}
-
-@model Session.Models.UserViewModel;
 @{
-    
+    ViewData["Title"] = "Home Page";
 }
+@model Session.Models.UserViewModel;
+
 <body>
-    @using (Html.BeginForm("Login", "Home", FormMethod.Post))
+    @using (Html.BeginForm("Index", "Home", FormMethod.Post))
     {
         @Html.AntiForgeryToken()
         @Html.ValidationSummary(true)
         @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", id = "UserName", placeholder = "Username", required = "required", autofocus = "autofocus" })
+        @Html.ValidationMessageFor(m => m.UserName)
         @Html.TextBoxFor(m => m.UserPassword, new { @class = "form-control", type = "password", placeholder = "Password", required = "" })
-        <button type="submit">Sign in</button>
+        @Html.ValidationMessageFor(m => m.UserPassword)
+
+        <button type="submit" class="btn btn-success">Sign in</button>
     }
+
+    <p style="color: red">@TempData["PasswordOrUsernameFalse"]</p>
 </body>
+@section Scripts{
+    <partial name="_ValidationScriptsPartial.cshtml" />
+}
