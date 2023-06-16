@@ -1,0 +1,12 @@
+@using Session.Context.Entity;
+@model UserIdentity
+@{
+    ViewData["Title"] = "Wilkommen";
+}
+
+<center>
+    <h1>Wilkommen</h1>
+    <h2>@Model.UserName</h2>
+
+    <p>Sie sind angemeldet als: @Model.Role</p>
+</center>

@@ -1,0 +1,23 @@
+@using Session.Context.Entity;
+@model LoggingViewModel
+@{
+    ViewData["Title"] = "Loggs";
+}
+
+
+<h1>Loggs von Gestern</h1>
+<h2>@Model.Username</h2>
+
+<table height="400px">
+    <thead>
+    <td>Meldung</td>
+    </thead>
+    <tbody style="width: 100%">
+        @foreach (var log in Model.Loggs)
+        {
+            <tr>
+                <td style="text-overflow: clip;">@log</td>
+            </tr>
+        }
+    </tbody>
+</table>

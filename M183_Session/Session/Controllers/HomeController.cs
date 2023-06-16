@@ -1,35 +1,38 @@
+using System.Diagnostics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 using Session.Context;
 using Session.Context.Entity;
 using Session.Models;
 using Session.Utilities;
+using System;
+using System.Collections.Generic;
+using System.IO;
 
 namespace Session.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> logger;
         private readonly SessionDBContext context;
 
-        public HomeController(ILogger<HomeController> logger, SessionDBContext context)
+        public HomeController(SessionDBContext context)
         {
-            this.logger = logger;
             this.context = context;
         }
 
         [HttpGet]
         public IActionResult Index()
         {
-            this.logger.LogInformation("Login Seite wurde Aufgerufen");
+            Log.Information("Login Seite wurde Aufgerufen");
             return View();
         }
 
         [HttpPost]
         public async Task<IActionResult> Index(UserViewModel userViewModel)
         {
-            this.logger.LogInformation("Login Request wurde gestartet");
+            Log.Information("Login Request wurde gestartet");
 
             try
             {
@@ -43,24 +46,27 @@ namespace Session.Controllers
                         this.HttpContext.Session.SetString(SessionConstants.UsernameProperty, user.UserName);
                         this.HttpContext.Session.SetString(SessionConstants.RoleProperty, user.Role);
 
-                        this.logger.LogInformation("Login erfolgreich {@User}", user);
+                        Log.Information("Login erfolgreich {@User}", user);
 
                         return this.RedirectToAction("Welcome", "Home");
                     }
                     else
                     {
-                        this.logger.LogWarning("Login Fehlgeschlagen {@UserViewModel}", userViewModel);
+                        Log.Warning("Login Fehlgeschlagen {@UserViewModel}", userViewModel);
                         TempData["PasswordOrUsernameFalse"] = "Passwort oder Username stimmen nicht";
                     }
                 }
             }
             catch (Exception e)
             {
-                this.logger.LogCritical(e, "Login Versuch hat eine Exception geworfen {@UserViewModel}", userViewModel);
-                return StatusCode(500, "Server Fehler bei der Anmeldung");
+                Log.Fatal(e, "Login Versuch hat eine Exception geworfen {@UserViewModel}", userViewModel);
+                return View("~/Views/Shared/Error.cshtml", new ErrorViewModel()
+                {
+                    RequestId = Activity.Current.TraceId.ToString(),
+                });
             }
 
-            this.logger.LogInformation("ModelState nicht Valid im Login {@UserViewModel}", userViewModel);
+            Log.Information("ModelState nicht Valid im Login {@UserViewModel}", userViewModel);
             return View(userViewModel);
         }
 
@@ -68,14 +74,62 @@ namespace Session.Controllers
         [SessionAuthorization]
         public async Task<IActionResult> Welcome()
         {
-            return View();
+            var username = this.HttpContext.Session.GetString(SessionConstants.UsernameProperty);
+            Log.Information("Willkommensseite wurde von {Username} aufgerufen", username);
+
+            try
+            {
+                var user = await this.context.Users.FirstOrDefaultAsync(x => x.UserName == username);
+                return View(user);
+            }
+            catch (Exception e)
+            {
+                Log.Fatal(e, "Willkommmensseite hat eine Exception geworfen {Username}", username);
+                return View("~/Views/Shared/Error.cshtml", new ErrorViewModel()
+                {
+                    RequestId = Activity.Current.TraceId.ToString(),
+                });
+            }
+
         }
 
         [HttpGet]
         [SessionAuthorization(SessionConstants.AdminRole)]
         public async Task<IActionResult> Logging()
         {
-            return View();
+            var username = this.HttpContext.Session.GetString(SessionConstants.UsernameProperty);
+            Log.Information("Loggingseite wurde von {Username} aufgerufen", username);
+            var fileName = @$"logs/logs-{DateTime.Today.AddDays(-1):yyyyMMdd}.txt";
+
+            try
+            {
+                var user = await this.context.Users.FirstOrDefaultAsync(x => x.UserName == username);
+                var vm = new LoggingViewModel()
+                {
+                    Username = user.UserName,
+                };
+
+                if (System.IO.File.Exists(fileName))
+                {
+                    Log.Information("Logfile mit {Filename} wird ausgelesen", fileName);
+                    vm.Loggs = await System.IO.File.ReadAllLinesAsync(fileName);
+                }
+                else
+                {
+                    Log.Warning("Log File mit {FileName} nicht gefunden", fileName);
+                    vm.Loggs = new[] { "Keine Loggs" };
+                }
+
+                return View(vm);
+            }
+            catch (Exception e)
+            {
+                Log.Fatal(e, "Loggingseite hat eine Exception geworfen {Username} {Filename}", username, fileName);
+                return View("~/Views/Shared/Error.cshtml", new ErrorViewModel()
+                {
+                    RequestId = Activity.Current.TraceId.ToString(),
+                });
+            }
         }
 
         [HttpGet]
@@ -83,7 +137,7 @@ namespace Session.Controllers
         public async Task<IActionResult> Logout()
         {
             var userName = this.HttpContext.Session.GetString(SessionConstants.UsernameProperty);
-            this.logger.LogInformation("User mit {Username} hat sich ausgeloggt", userName);
+            Log.Information("User mit {Username} hat sich ausgeloggt", userName);
             this.HttpContext.Session.Clear();
             return RedirectToAction("Index", "Home");
         }
