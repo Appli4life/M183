@@ -6,28 +6,45 @@
 <body>
     @using (Html.BeginForm("AddUser", "Home", FormMethod.Post))
     {
-        @Html.AntiForgeryToken()
-        @Html.ValidationSummary(true)
+            <div class="mb-3">
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
 
-        @Html.LabelFor(m => m.UserName)
-        @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", id = "UserName", placeholder = "Username", required = "required", autofocus = "autofocus" })
-        <div>
-            <span asp-validation-for="@Model.UserName" style="color:red"></span>
-        </div>
+                @Html.LabelFor(m => m.UserName)
+                @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", id = "UserName", placeholder = "Username", required = "required", autofocus = "autofocus" })
+                <div>
+                    <span asp-validation-for="@Model.UserName" style="color:red"></span>
+                </div>
+                <div class="col-auto">
+                    <span id="usernameHelpInline" class="form-text">
+                        Muss zwischen 3-20 Zeichen lang sein.
+                    </span>
+                </div>
+            </div>
 
-        @Html.LabelFor(m => m.UserPassword)
-        @Html.TextBoxFor(m => m.UserPassword, new { @class = "form-control", type = "password", placeholder = "Password", required = "" })
-        <div>
-            <span asp-validation-for="@Model.UserPassword" style="color:red"></span>
-        </div>
+            <div class="mb-3">
+                @Html.LabelFor(m => m.UserPassword)
+                @Html.TextBoxFor(m => m.UserPassword, new { @class = "form-control", type = "password", placeholder = "Password", required = "" })
+                <div>
+                    <span asp-validation-for="@Model.UserPassword" style="color:red"></span>
+                </div>
+                <div class="col-auto">
+                    <span id="passwordHelpInline" class="form-text">
+                        Muss zwischen 8-20 Zeichen lang sein.
+                    </span>
+                </div>
+            </div>
 
-        @Html.LabelFor(m => m.UserSecondPassword)
-        @Html.TextBoxFor(m => m.UserSecondPassword, new { @class = "form-control", type = "password", placeholder = "Password nochmals eingeben", required = "" })
-        <div>
-            <span asp-validation-for="@Model.UserSecondPassword" style="color:red"></span>
-        </div>
 
-        <button type="submit" class="btn btn-success">Add User</button>
+            <div class="mb-3">
+                @Html.LabelFor(m => m.UserSecondPassword)
+                @Html.TextBoxFor(m => m.UserSecondPassword, new { @class = "form-control", type = "password", placeholder = "Password nochmals eingeben", required = "" })
+                <div>
+                    <span asp-validation-for="@Model.UserSecondPassword" style="color:red"></span>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-success">User erstellen</button>
     }
 
     <p style="color: green">@TempData["UserCreated"]</p>

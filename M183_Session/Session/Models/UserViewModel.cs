@@ -8,7 +8,7 @@ namespace Session.Models
         [MinLength(3, ErrorMessage = "Benutzername zu kurz: min {1}")]
         [MaxLength(50, ErrorMessage = "Benutzername ist zu lang: max {1}")]
         [Required(ErrorMessage = "Der Benutzername ist Notwendig")]
-        [DisplayName("Benutername")]
+        [DisplayName("Benutzername")]
         public string UserName { get; set; }
 
         [MaxLength(255)]
