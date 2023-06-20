@@ -136,4 +136,13 @@ public class HomeController : Controller
         this.HttpContext.Session.Clear();
         return this.RedirectToAction("Index", "Home");
     }
+
+
+    [HttpGet]
+    [SessionAuthorization(SessionConstants.AdminRole)]
+    public async Task<IActionResult> GetAllBalances()
+    {
+        //List<int> balances = new List<int>();
+        //context.Users.ForEachAsync(user => { user.Balance });
+    }
 }
