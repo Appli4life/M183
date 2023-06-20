@@ -191,4 +191,13 @@ public class HomeController : Controller
         }
         return View(addUserViewModel);
     }
+
+
+    //[HttpGet]
+    //[SessionAuthorization(SessionConstants.AdminRole)]
+    //public async Task<IActionResult> GetAllBalances()
+    //{
+    //    //List<int> balances = new List<int>();
+    //    //context.Users.ForEachAsync(user => { user.Balance });
+    //}
 }

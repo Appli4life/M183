@@ -16,5 +16,7 @@ namespace Session.Context.Entity
 
         [MaxLength(20)]
         public string Role { get; set; }
+
+        public int Balance { get; set; }
     }
 }
