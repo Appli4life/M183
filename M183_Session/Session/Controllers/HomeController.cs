@@ -136,4 +136,51 @@ public class HomeController : Controller
         this.HttpContext.Session.Clear();
         return this.RedirectToAction("Index", "Home");
     }
+
+    [HttpGet]
+    [SessionAuthorization(SessionConstants.AdminRole)]
+    public async Task<IActionResult> AddUser()
+    {
+        Log.Information("Add User Webseite wird aufgerugen");
+        return View();
+    }
+
+    [HttpPost]
+    [SessionAuthorization(SessionConstants.AdminRole)]
+    public async Task<IActionResult> AddUser(AddUserViewModel addUserViewModel)
+    {
+        try
+        {
+            if (this.ModelState.IsValid)
+            {
+                var hasher = new PasswordHasher<UserIdentity>();
+
+                var newUser = new UserIdentity();
+                newUser.UserName = addUserViewModel.UserName;
+                newUser.Password = addUserViewModel.UserPassword;
+
+                newUser.Password = hasher.HashPassword(newUser, newUser.Password);
+
+                newUser.Role = SessionConstants.UserRole;
+
+                await this.context.AddAsync(newUser);
+                await this.context.SaveChangesAsync();
+                TempData["UserCreated"] = "User wurde erfolgreich erstellt";
+
+                var username = this.HttpContext.Session.GetString(SessionConstants.UsernameProperty);
+                Log.Information("{User} hat erstellt {@newUser}", username, newUser);
+
+                return View();
+            }
+        }
+        catch (Exception e)
+        {
+            Log.Fatal(e, "User konnte nicht angelegt werden und hat eine Exception ausgelöst {@AddUserViewModel}", addUserViewModel);
+            return View("~/Views/Shared/Error.cshtml", new ErrorViewModel()
+            {
+                TraceId = Activity.Current?.TraceId.ToString(),
+            });
+        }
+        return View(addUserViewModel);
+    }
 }
