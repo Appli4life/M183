@@ -1,0 +1,23 @@
+@model BalanceViewModel
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Kontostand bearbeiten</h1>
+
+<h2>@Model.UserName</h2>
+@using (Html.BeginForm("Edit", "Home", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    @Html.LabelFor(m => m.Balance)
+    @Html.TextBoxFor(m => m.Balance, new { @class = "form-control" })
+}
+<div>
+    <span asp-validation-for="@Model.Balance" style="color:red"></span>
+</div>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial.cshtml" />
+}

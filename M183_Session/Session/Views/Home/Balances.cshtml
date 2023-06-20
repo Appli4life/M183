@@ -1,10 +1,23 @@
-@using Session.Context.Entity;
+@model List<BalanceViewModel>;
 @{
     ViewData["Title"] = "Blances";
 }
+<h1>Kontostand der Users</h1>
 
-<h1>Loggs von Gestern</h1>
-
-<table height="400px">
-
+<table>
+    <tr>
+        <th>User</th>
+        <th>Balance</th>
+        <th>Edit</th>
+    </tr>
+    
+        @foreach (var balance in Model)
+        {
+            <tr>
+                <td>@balance.UserName</td>
+                <td>@balance.Balance</td>
+            <td><a asp-controller="Home" asp-action="Edit" asp-route-username="@balance.UserName">Edit</a></td>
+            </tr>
+        }
+    
 </table>

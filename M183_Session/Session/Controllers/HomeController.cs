@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Globalization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -27,6 +28,7 @@ public class HomeController : Controller
     }
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Index(UserViewModel userViewModel)
     {
         Log.Information("Login Request wurde gestartet");
@@ -146,6 +148,7 @@ public class HomeController : Controller
     }
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     [SessionAuthorization(SessionConstants.AdminRole)]
     public async Task<IActionResult> AddUser(AddUserViewModel addUserViewModel)
     {
@@ -184,12 +187,23 @@ public class HomeController : Controller
         return View(addUserViewModel);
     }
 
+    [HttpGet]
+    [SessionAuthorization(SessionConstants.AdminRole)]
+    public async Task<IActionResult> Balances()
+    {
+        var balances = await context.Users.Select(context => new BalanceViewModel() { Balance = context.Balance, UserName = context.UserName }).ToListAsync();
 
-    //[HttpGet]
-    //[SessionAuthorization(SessionConstants.AdminRole)]
-    //public async Task<IActionResult> GetAllBalances()
-    //{
-    //    //List<int> balances = new List<int>();
-    //    //context.Users.ForEachAsync(user => { user.Balance });
-    //}
+        //List<int> balances = new List<int>();
+        //context.Users.ForEachAsync(user => { user.Balance });
+        return View(balances);
+    }
+
+    [HttpGet("{username}")]
+    [SessionAuthorization(SessionConstants.AdminRole)]
+    public async Task<IActionResult> Edit(string username)
+    {
+        var user = await context.Users.FirstAsync(u => u.UserName == username);
+        var vm = new BalanceViewModel { UserName = user.UserName, Balance = user.Balance };
+        return View(vm);
+    }
 }

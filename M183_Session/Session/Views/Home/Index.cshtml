@@ -10,13 +10,13 @@
         @Html.ValidationSummary(true)
 
         @Html.LabelFor(m => m.UserName)
-        @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", id = "UserName", placeholder = "Username", required = "required", autofocus = "autofocus" })
+        @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", placeholder = "Username" })
         <div>
             <span asp-validation-for="@Model.UserName" style="color:red"></span>
         </div>
 
         @Html.LabelFor(m => m.UserPassword)
-        @Html.TextBoxFor(m => m.UserPassword, new { @class = "form-control", type = "password", placeholder = "Password", required = "" })
+        @Html.PasswordFor(m => m.UserPassword, new { @class = "form-control", placeholder = "Password"})
         <div>
             <span asp-validation-for="@Model.UserPassword" style="color:red"></span>
         </div>
