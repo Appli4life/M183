@@ -6,22 +6,26 @@
 <body>
     @using (Html.BeginForm("Index", "Home", FormMethod.Post))
     {
-        @Html.AntiForgeryToken()
-        @Html.ValidationSummary(true)
+            <div class="mb-3">
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
 
-        @Html.LabelFor(m => m.UserName)
-        @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", placeholder = "Username" })
-        <div>
-            <span asp-validation-for="@Model.UserName" style="color:red"></span>
-        </div>
+                @Html.LabelFor(m => m.UserName)
+                @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", id = "UserName", placeholder = "Username", required = "required", autofocus = "autofocus" })
+                <div>
+                    <span asp-validation-for="@Model.UserName" style="color:red"></span>
+                </div>
+            </div>
 
-        @Html.LabelFor(m => m.UserPassword)
-        @Html.PasswordFor(m => m.UserPassword, new { @class = "form-control", placeholder = "Password"})
-        <div>
-            <span asp-validation-for="@Model.UserPassword" style="color:red"></span>
-        </div>
+            <div class="mb-3">
+                @Html.LabelFor(m => m.UserPassword)
+                @Html.TextBoxFor(m => m.UserPassword, new { @class = "form-control", type = "password", placeholder = "Password", required = "" })
+                <div>
+                    <span asp-validation-for="@Model.UserPassword" style="color:red"></span>
+                </div>
+            </div>
 
-        <button type="submit" class="btn btn-success">Sign in</button>
+            <button type="submit" class="btn btn-success">Anmelden</button>
     }
 
     <p style="color: red">@TempData["PasswordOrUsernameFalse"]</p>

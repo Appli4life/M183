@@ -22,13 +22,13 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Startseite</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Logging">Loggs</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Logging">Protokoll</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="AddUser">New User</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="AddUser">Benutzerverwaltung</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Balances">Blances</a>
@@ -38,7 +38,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link text-black" asp-area="" asp-controller="Home" asp-action="Welcome">@(Context.HttpContext.Session.GetString(SessionConstants.UsernameProperty))</a>
+                            <a class="nav-link text-black" asp-area="" asp-controller="Home" asp-action="Wilkommen">@(Context.HttpContext.Session.GetString(SessionConstants.UsernameProperty))</a>
                         </li>
                     </ul>
                 </div>
