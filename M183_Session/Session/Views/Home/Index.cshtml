@@ -6,7 +6,6 @@
 <body>
     @using (Html.BeginForm("Index", "Home", FormMethod.Post))
     {
-        <form>
             <div class="mb-3">
                 @Html.AntiForgeryToken()
                 @Html.ValidationSummary(true)
@@ -27,7 +26,6 @@
             </div>
 
             <button type="submit" class="btn btn-success">Anmelden</button>
-        </form>
     }
 
     <p style="color: red">@TempData["PasswordOrUsernameFalse"]</p>
