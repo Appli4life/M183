@@ -28,7 +28,7 @@
                             <a class="nav-link text-danger" asp-area="" asp-controller="Home" asp-action="Logout">Abmelden</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-black" asp-area="" asp-controller="Home" asp-action="Willkommen">@(Context.HttpContext.Session.GetString(SessionConstants.UsernameProperty))</a>
+                            <a class="nav-link text-black" asp-area="" asp-controller="Home" asp-action="Welcome">@(Context.HttpContext.Session.GetString(SessionConstants.UsernameProperty))</a>
                         </li>
                     </ul>
                 </div>
