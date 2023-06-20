@@ -8,16 +8,25 @@
     {
         @Html.AntiForgeryToken()
         @Html.ValidationSummary(true)
+
+        @Html.LabelFor(m => m.UserName)
         @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", id = "UserName", placeholder = "Username", required = "required", autofocus = "autofocus" })
-        @Html.ValidationMessageFor(m => m.UserName)
+        <div>
+            <span asp-validation-for="@Model.UserName" style="color:red"></span>
+        </div>
+
+        @Html.LabelFor(m => m.UserPassword)
         @Html.TextBoxFor(m => m.UserPassword, new { @class = "form-control", type = "password", placeholder = "Password", required = "" })
-        @Html.ValidationMessageFor(m => m.UserPassword)
+        <div>
+            <span asp-validation-for="@Model.UserPassword" style="color:red"></span>
+        </div>
 
         <button type="submit" class="btn btn-success">Sign in</button>
     }
 
     <p style="color: red">@TempData["PasswordOrUsernameFalse"]</p>
 </body>
+
 @section Scripts{
     <partial name="_ValidationScriptsPartial.cshtml" />
 }
