@@ -180,15 +180,17 @@ public class HomeController : Controller
                 }
                 return View();
             }
+
         }
         catch (Exception e)
         {
-            Log.Fatal(e, "User konnte nicht angelegt werden und hat eine Exception ausgelöst {@AddUserViewModel}", addUserViewModel);
+            Log.Fatal(e, "User konnte nicht angelegt werden und hat ein Exception ausgelöst {@AddUserViewModel}", addUserViewModel);
             return View("~/Views/Shared/Error.cshtml", new ErrorViewModel()
             {
                 TraceId = Activity.Current?.TraceId.ToString(),
             });
         }
+        Log.Information("ModelState ist nicht valid {usermodel}", addUserViewModel);
         return View(addUserViewModel);
     }
 
