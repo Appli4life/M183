@@ -151,6 +151,9 @@ public class HomeController : Controller
     [SessionAuthorization(SessionConstants.AdminRole)]
     public async Task<IActionResult> AddUser(AddUserViewModel addUserViewModel)
     {
+        var username = this.HttpContext.Session.GetString(SessionConstants.UsernameProperty);
+        Log.Information("Neuer User wird von {User} angelegt {@Model}", username, addUserViewModel);
+
         try
         {
             if (this.ModelState.IsValid)
@@ -177,7 +180,6 @@ public class HomeController : Controller
                     await this.context.SaveChangesAsync();
                     TempData["UserCreated"] = "User wurde erfolgreich erstellt";
 
-                    var username = this.HttpContext.Session.GetString(SessionConstants.UsernameProperty);
                     Log.Information("{User} hat erstellt {@newUser}", username, newUser);
                 }
                 return View();
@@ -192,6 +194,7 @@ public class HomeController : Controller
                 TraceId = Activity.Current?.TraceId.ToString(),
             });
         }
+
         Log.Information("ModelState ist nicht valid {usermodel}", addUserViewModel);
         return View(addUserViewModel);
     }
@@ -200,31 +203,76 @@ public class HomeController : Controller
     [SessionAuthorization(SessionConstants.AdminRole)]
     public async Task<IActionResult> Balances()
     {
-        var balances = await context.Users.Select(context => new BalanceViewModel() { Balance = context.Balance, UserName = context.UserName }).ToListAsync();
+        Log.Information("Balances wird aufgerufen");
 
-        //List<int> balances = new List<int>();
-        //context.Users.ForEachAsync(user => { user.Balance });
-        return View(balances);
+        try
+        {
+            var balances = await context.Users
+                .Select(u => new BalanceViewModel() { Balance = u.Balance, UserName = u.UserName })
+                .ToListAsync();
+
+            return View(balances);
+        }
+        catch (Exception e)
+        {
+            Log.Fatal(e, "Balances konnte nicht aufgerufen werden und hat ein Exception ausgelöst");
+            return View("~/Views/Shared/Error.cshtml", new ErrorViewModel()
+            {
+                TraceId = Activity.Current?.TraceId.ToString(),
+            });
+        }
     }
 
     [HttpGet("{username}")]
     [SessionAuthorization(SessionConstants.AdminRole)]
     public async Task<IActionResult> Edit(string username)
     {
-        var user = await context.Users.FirstAsync(u => u.UserName == username);
-        var vm = new BalanceViewModel { UserName = user.UserName, Balance = user.Balance };
-        return View(vm);
+        Log.Information("Balance Edit Seite wird für {User} aufgerufen", username);
+
+        try
+        {
+            var user = await context.Users.FirstAsync(u => u.UserName == username);
+            var vm = new BalanceViewModel { UserName = user.UserName, Balance = user.Balance };
+            return View(vm);
+        }
+        catch (Exception e)
+        {
+            Log.Fatal(e, "Balance für {User} konnte nicht aufgerufen werden und hat ein Exception ausgelöst", username);
+            return View("~/Views/Shared/Error.cshtml", new ErrorViewModel()
+            {
+                TraceId = Activity.Current?.TraceId.ToString(),
+            });
+        }
     }
 
-    [HttpPost]
+    [HttpPost("{username}")]
     [ValidateAntiForgeryToken]
     [SessionAuthorization(SessionConstants.AdminRole)]
     public async Task<IActionResult> Edit(BalanceViewModel model)
     {
-        var user = await context.Users.FirstAsync(u => u.UserName == model.UserName);
-        user.Balance = model.Balance;
-        context.SaveChanges();
+        Log.Information("{Balance} wird für {User} gespeichert", model.UserName, model.Balance);
 
-        return RedirectToAction("Balances");
+        try
+        {
+            if (this.ModelState.IsValid)
+            {
+                var user = await context.Users.FirstAsync(u => u.UserName == model.UserName);
+                user.Balance = model.Balance;
+                await this.context.SaveChangesAsync();
+
+                return RedirectToAction("Balances");
+            }
+        }
+        catch (Exception e)
+        {
+            Log.Fatal(e, "{Balance}  für {User} konnte nicht gespeichert werden und hat ein Exception ausgelöst", model.Balance, model.UserName);
+            return View("~/Views/Shared/Error.cshtml", new ErrorViewModel()
+            {
+                TraceId = Activity.Current?.TraceId.ToString(),
+            });
+        }
+
+        Log.Information("Balance Speichern ModelState Invalid {@Model}", model);
+        return this.View(model);
     }
 }

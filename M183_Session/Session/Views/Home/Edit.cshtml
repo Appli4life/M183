@@ -6,14 +6,19 @@
 <h1>Kontostand bearbeiten</h1>
 
 <h2>@Model.UserName</h2>
-@using (Html.BeginForm("Edit", "Home", FormMethod.Post))
-{
+<form>
+
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true)
+    @Html.HiddenFor(m => m.UserName)
 
     @Html.LabelFor(m => m.Balance)
     @Html.TextBoxFor(m => m.Balance, new { @class = "form-control", type = "number" })
-}
+
+
+    <button type="submit" class="btn btn-success">Speichern</button>
+
+</form>
 <div>
     <span asp-validation-for="@Model.Balance" style="color:red"></span>
 </div>
