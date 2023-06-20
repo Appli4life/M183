@@ -7,9 +7,6 @@ using Session.Context;
 using Session.Context.Entity;
 using Session.Models;
 using Session.Utilities;
-using System;
-using System.Collections.Generic;
-using System.IO;
 
 namespace Session.Controllers
 {
@@ -53,7 +50,7 @@ namespace Session.Controllers
                     else
                     {
                         Log.Warning("Login Fehlgeschlagen {@UserViewModel}", userViewModel);
-                        TempData["PasswordOrUsernameFalse"] = "Passwort oder Username stimmen nicht";
+                        TempData["PasswordOrUsernameFalse"] = "Passwort oder Benutzername falsch";
                     }
                 }
             }
