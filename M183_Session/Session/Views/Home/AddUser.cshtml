@@ -1,0 +1,38 @@
+@{
+    ViewData["Title"] = "Add User Page";
+}
+@model Session.Models.AddUserViewModel
+
+<body>
+    @using (Html.BeginForm("AddUser", "Home", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+
+        @Html.LabelFor(m => m.UserName)
+        @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", id = "UserName", placeholder = "Username", required = "required", autofocus = "autofocus" })
+        <div>
+            <span asp-validation-for="@Model.UserName" style="color:red"></span>
+        </div>
+
+        @Html.LabelFor(m => m.UserPassword)
+        @Html.TextBoxFor(m => m.UserPassword, new { @class = "form-control", type = "password", placeholder = "Password", required = "" })
+        <div>
+            <span asp-validation-for="@Model.UserPassword" style="color:red"></span>
+        </div>
+
+        @Html.LabelFor(m => m.UserSecondPassword)
+        @Html.TextBoxFor(m => m.UserSecondPassword, new { @class = "form-control", type = "password", placeholder = "Password nochmals eingeben", required = "" })
+        <div>
+            <span asp-validation-for="@Model.UserSecondPassword" style="color:red"></span>
+        </div>
+
+        <button type="submit" class="btn btn-success">Add User</button>
+    }
+
+    <p style="color: green">@TempData["UserCreated"]</p>
+</body>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial.cshtml" />
+}

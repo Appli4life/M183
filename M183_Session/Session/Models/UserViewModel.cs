@@ -5,7 +5,6 @@ namespace Session.Models
 {
     public class UserViewModel
     {
-        public int Id { get; set; }
 
         [MaxLength(50)]
         [Required(ErrorMessage = "Der Benutzername ist Notwendig")]

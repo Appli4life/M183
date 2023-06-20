@@ -28,3 +28,7 @@ body {
 .form-control:nth-child(2) {
     margin-bottom: 10px;
 }
+
+.btn {
+    margin-top: 10px;
+}
