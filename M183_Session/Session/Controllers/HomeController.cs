@@ -163,13 +163,21 @@ public class HomeController : Controller
 
                 newUser.Role = SessionConstants.UserRole;
 
-                await this.context.AddAsync(newUser);
-                await this.context.SaveChangesAsync();
-                TempData["UserCreated"] = "User wurde erfolgreich erstellt";
+                var exists = await this.context.Users.FirstOrDefaultAsync(u => u.UserName == newUser.UserName);
+                if (exists is not null)
+                {
+                    Log.Information("User wurde nicht erstellt: {Username} exisitiert bereits", exists.UserName);
+                    TempData["UserNotCreated"] = "User wurde nicht erstellt: Username exisitiert bereits";
+                }
+                else
+                {
+                    await this.context.AddAsync(newUser);
+                    await this.context.SaveChangesAsync();
+                    TempData["UserCreated"] = "User wurde erfolgreich erstellt";
 
-                var username = this.HttpContext.Session.GetString(SessionConstants.UsernameProperty);
-                Log.Information("{User} hat erstellt {@newUser}", username, newUser);
-
+                    var username = this.HttpContext.Session.GetString(SessionConstants.UsernameProperty);
+                    Log.Information("{User} hat erstellt {@newUser}", username, newUser);
+                }
                 return View();
             }
         }

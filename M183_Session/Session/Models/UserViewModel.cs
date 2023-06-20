@@ -5,8 +5,8 @@ namespace Session.Models
 {
     public class UserViewModel
     {
-
-        [MaxLength(50)]
+        [MinLength(3, ErrorMessage = "Benutzername zu kurz: min {1}")]
+        [MaxLength(50, ErrorMessage = "Benutzername ist zu lang: max {1}")]
         [Required(ErrorMessage = "Der Benutzername ist Notwendig")]
         [DisplayName("Benutername")]
         public string UserName { get; set; }
