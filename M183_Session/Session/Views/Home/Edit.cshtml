@@ -12,7 +12,7 @@
     @Html.ValidationSummary(true)
 
     @Html.LabelFor(m => m.Balance)
-    @Html.TextBoxFor(m => m.Balance, new { @class = "form-control" })
+    @Html.TextBoxFor(m => m.Balance, new { @class = "form-control", type = "number" })
 }
 <div>
     <span asp-validation-for="@Model.Balance" style="color:red"></span>

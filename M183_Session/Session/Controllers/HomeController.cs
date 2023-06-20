@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using System.Globalization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -215,5 +214,17 @@ public class HomeController : Controller
         var user = await context.Users.FirstAsync(u => u.UserName == username);
         var vm = new BalanceViewModel { UserName = user.UserName, Balance = user.Balance };
         return View(vm);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    [SessionAuthorization(SessionConstants.AdminRole)]
+    public async Task<IActionResult> Edit(BalanceViewModel model)
+    {
+        var user = await context.Users.FirstAsync(u => u.UserName == model.UserName);
+        user.Balance = model.Balance;
+        context.SaveChanges();
+
+        return RedirectToAction("Balances");
     }
 }
