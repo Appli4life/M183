@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Serilog;
 
 namespace Session.Utilities;
 
@@ -26,6 +27,7 @@ public class SessionAuthorization : ActionFilterAttribute
 
         if (string.IsNullOrEmpty(loggedIn) || this.roles.Contains(role) == false)
         {
+            Log.Warning("Client ist nicht Authorisiert. {@Context}", context);
             context.Result = new RedirectToRouteResult(
                 new RouteValueDictionary {
                             { "Controller", "Home" },
