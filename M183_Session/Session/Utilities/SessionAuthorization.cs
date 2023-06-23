@@ -32,6 +32,8 @@ public class SessionAuthorization : Attribute, IAsyncActionFilter
                 new RouteValueDictionary {
                             { "Controller", "Home" },
                             { "Action", "Index" } });
+
+            return;
         }
 
         await next();
