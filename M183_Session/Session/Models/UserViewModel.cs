@@ -11,9 +11,9 @@ namespace Session.Models
         [DisplayName("Benutzername")]
         public string UserName { get; set; }
 
-        [MaxLength(255)]
+        [MaxLength(255, ErrorMessage = "Benutzername ist zu lang: max {1}"))]
         [DisplayName("Passwort")]
-        [Required]
+        [Required(ErrorMessage = "Das Passwwort ist Notwendig")]
         public string UserPassword { get; set; }
 
     }
