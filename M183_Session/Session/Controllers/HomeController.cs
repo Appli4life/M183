@@ -44,27 +44,27 @@ public class HomeController : Controller
                     this.HttpContext.Session.SetString(SessionConstants.UsernameProperty, user.UserName);
                     this.HttpContext.Session.SetString(SessionConstants.RoleProperty, user.Role);
 
-                    Log.Information("Login erfolgreich {@User}", user);
+                    Log.Information("Login erfolgreich {Username}", user.UserName);
 
                     return this.RedirectToAction("Welcome", "Home");
                 }
                 else
                 {
-                    Log.Warning("Login Fehlgeschlagen {@UserViewModel}", userViewModel);
+                    Log.Warning("Login Fehlgeschlagen {Username}", userViewModel.UserName);
                     TempData["PasswordOrUsernameFalse"] = "Passwort oder Username stimmen nicht";
                 }
             }
         }
         catch (Exception e)
         {
-            Log.Fatal(e, "Login Versuch hat eine Exception geworfen {@UserViewModel}", userViewModel);
+            Log.Fatal(e, "Login Versuch hat eine Exception geworfen {Username}", userViewModel.UserName);
             return View("~/Views/Shared/Error.cshtml", new ErrorViewModel()
             {
                 TraceId = Activity.Current?.TraceId.ToString(),
             });
         }
 
-        Log.Information("ModelState nicht Valid im Login {@UserViewModel}", userViewModel);
+        Log.Information("ModelState nicht Valid im Login {Username}", userViewModel.UserName);
         return View(userViewModel);
     }
 
@@ -152,7 +152,7 @@ public class HomeController : Controller
     public async Task<IActionResult> AddUser(AddUserViewModel addUserViewModel)
     {
         var username = this.HttpContext.Session.GetString(SessionConstants.UsernameProperty);
-        Log.Information("Neuer User wird von {User} angelegt {@Model}", username, addUserViewModel);
+        Log.Information("Neuer User wird von {Username} angelegt {NewUsername}", username, addUserViewModel.UserName);
 
         try
         {
@@ -180,7 +180,7 @@ public class HomeController : Controller
                     await this.context.SaveChangesAsync();
                     TempData["UserCreated"] = "User wurde erfolgreich erstellt";
 
-                    Log.Information("{User} hat erstellt {@newUser}", username, newUser);
+                    Log.Information("{User} hat erstellt {NewUsername}", username, newUser.UserName);
                 }
                 return View();
             }
@@ -188,14 +188,14 @@ public class HomeController : Controller
         }
         catch (Exception e)
         {
-            Log.Fatal(e, "User konnte nicht angelegt werden und hat ein Exception ausgelöst {@AddUserViewModel}", addUserViewModel);
+            Log.Fatal(e, "User konnte nicht angelegt werden und hat ein Exception ausgelöst {NewUsername}", addUserViewModel.UserName);
             return View("~/Views/Shared/Error.cshtml", new ErrorViewModel()
             {
                 TraceId = Activity.Current?.TraceId.ToString(),
             });
         }
 
-        Log.Information("ModelState ist nicht valid {usermodel}", addUserViewModel);
+        Log.Information("ModelState ist nicht valid {NewUsername}", addUserViewModel.UserName);
         return View(addUserViewModel);
     }
 
