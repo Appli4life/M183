@@ -27,7 +27,7 @@ public class SessionAuthorization : Attribute, IAsyncActionFilter
 
         if (string.IsNullOrEmpty(username) || this.roles.Contains(role) == false)
         {
-            Log.Warning("Client ist nicht Authorisiert. {@Context}", context);
+            Log.Warning("Client ist nicht Authorisiert. {Username} {Rolle}", username, role);
             context.Result = new RedirectToRouteResult(
                 new RouteValueDictionary {
                             { "Controller", "Home" },
